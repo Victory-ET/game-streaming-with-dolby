@@ -37,5 +37,10 @@
 /* End of Login styles */
 
 /* Game Streaming window styles */
+.game-streaming{
+  @apply flex p-6 items-center justify-center h-screen;
+}
+
+/* video interface style */
 
 
