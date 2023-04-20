@@ -2,7 +2,7 @@ import React from 'react'
 
 const ChatWindow = () => {
   return (
-    <div>ChatWindow</div>
+    <div className='chat-window'>ChatWindow</div>
   )
 }
 

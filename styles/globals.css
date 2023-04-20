@@ -38,9 +38,26 @@
 
 /* Game Streaming window styles */
 .game-streaming{
-  @apply flex p-6 items-center justify-center h-screen;
+  @apply flex p-6 gap-12 items-center w-full justify-center h-screen;
 }
 
 /* video interface style */
+.video-interface{
+  @apply relative w-[65%] h-[90%] rounded-2xl bg-red-300 shadow-xl;
+}
+
+/* view area */
+.video-interface__view-area{
+  @apply relative w-full h-[70%] rounded-t-2xl  shadow-md;
+}
+
+/* number of viewers */
+
+.video-interface__view-area__viewers{
+@apply absolute top-4 left-5 px-5 py-3 bg-slate-400/70 rounded-xl text-white font-medium text-xs;
+}
 
 
+.chat-window{
+  @apply w-[30%] relative h-[90%] bg-blue-400 rounded-xl;
+}

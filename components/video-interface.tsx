@@ -8,7 +8,7 @@ const VideoInterface = () => {
         {/* view area */}
         <div className="video-interface__view-area__viewers">
           {/* number of viewers */}
-          <p>500 watching</p>
+          <p>500 Watching</p>
         </div>
       </div>
       <div className="video-interface__stream-info">
