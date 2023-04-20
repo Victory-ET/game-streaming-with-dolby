@@ -4,7 +4,7 @@ import React from "react";
 
 const gameStream = () => {
   return (
-    <div>
+    <div className="game-streaming">
       {/* Game Streaming Platform */}
 
       {/* Video Interface */}
