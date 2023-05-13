@@ -1,8 +1,12 @@
+import React from "react";
 import ChatWindow from "@/components/chat-window";
 import VideoInterface from "@/components/video-interface";
-import React from "react";
+import { useRouter } from "next/router";
 
-const gameStream = () => {
+const GameStream = () => {
+  const router = useRouter();
+  const { name, role } = router.query;
+
   return (
     <div className="game-streaming">
       {/* Game Streaming Platform */}
@@ -10,9 +14,9 @@ const gameStream = () => {
       {/* Video Interface */}
       <VideoInterface />
       {/* Chat Panel */}
-      <ChatWindow />
+      <ChatWindow username={name} role={role} />
     </div>
   );
 };
 
-export default gameStream;
+export default GameStream;

@@ -38,12 +38,12 @@
 
 /* Game Streaming window styles */
 .game-streaming{
-  @apply flex p-6 gap-12 items-center w-full justify-center h-screen;
+  @apply flex p-6 gap-12 items-center w-full bg-gray-900 justify-center h-screen;
 }
 
 /* video interface style */
 .video-interface{
-  @apply relative w-[65%] h-[90%] rounded-2xl bg-red-300 shadow-xl;
+  @apply relative w-[65%] h-[90%] rounded-2xl shadow-2xl;
 }
 
 /* view area */
@@ -54,10 +54,52 @@
 /* number of viewers */
 
 .video-interface__view-area__viewers{
-@apply absolute top-4 left-5 px-5 py-3 bg-slate-400/70 rounded-xl text-white font-medium text-xs;
+@apply absolute top-4 left-5 px-5 py-3 bg-slate-400/20 opacity-50 rounded-xl text-white font-medium text-xs;
 }
 
+/* stream info */
+.video-interface__stream-info{
+  @apply relative w-full h-[30%] pt-3 pl-6 rounded-b-2xl bg-gray-700 text-white;
+}
+
+/* streamer details */
+.video-interface__stream-info__streamer{
+  @apply flex gap-4 items-center;
+}
+
+/* streamer name */
+.video-interface__stream-info__streamer__name{
+  @apply text-lg font-semibold;
+}
+
+/* streamer status */
+.video-interface__stream-info__streamer__status{
+  @apply text-sm py-2 px-6 text-blue-400 font-bold bg-white rounded-xl;
+}
+
+/* stream description */
+.video-interface__stream-info__stream{
+  @apply text-gray-200 mt-8 flex gap-6 flex-col;
+}
+
+.video-interface__stream-info__stream__game-name{
+  @apply text-4xl font-bold;
+}
+
+/* stream actions */
+.video-interface__stream-info__stream__actions{
+  @apply flex justify-end pr-24 gap-4 items-center;
+}
+
+/* stream actions button */
+.video-interface__stream-info__stream__actions__like{
+  @apply text-sm py-2 px-4 text-blue-400 font-bold bg-white rounded-xl;
+}
+
+.video-interface__stream-info__stream__actions__share{
+  @apply font-semibold;
+}
 
 .chat-window{
-  @apply w-[30%] relative h-[90%] bg-blue-400 rounded-xl;
+  @apply w-[30%] relative h-[90%] rounded-xl shadow-2xl;
 }
