@@ -48,7 +48,7 @@ const ChatWindow = ({ username, role }: ChatWindowProps) => {
 
       // when new users enter chat
       channel.bind("pusher:member_added", (members: any) => {
-        setOnlineUsersCount(channel.members.count);
+        setOnlineUsersCount(members.count);
         console.log(members);
         
 
@@ -56,10 +56,10 @@ const ChatWindow = ({ username, role }: ChatWindowProps) => {
         setOnlineUsersCount(onlineUsersCount + 1)
       });
 
-      channel.bind("pusher:chat-update", (data: any) => {
+      channel.bind("chat-message", (data: any) => {
         const { message, username } = data;
 
-        console.log(data);
+        console.log("ffff",data);
         // to add to previous state
         setChat((prev: { username: any; message: any; }[]) => [...prev, { username, message }]);
       });
