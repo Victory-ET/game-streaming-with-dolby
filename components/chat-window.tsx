@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from "react";
 import Pusher from "pusher-js";
 import axios from "axios";
-import { log } from "console";
 
+// define type of data passed to the component
 type ChatWindowProps = {
   username: string | string[] | undefined;
   role: string | string[] | undefined;
 };
 const ChatWindow = ({ username, role }: ChatWindowProps) => {
   //   pusher
-  // const pusher = new Pusher(process.env.key as string, {
-  const pusher = new Pusher("93611100d62ff293233c", {
-    // cluster: process.env.cluster as string,
-    // cluster: process.env.cluster as string,
-    cluster: "mt1",
+  const pusher = new Pusher(process.env.NEXT_PUBLIC_APP_ID as string, {
+    cluster: process.env.NEXT_PUBLIC_CLUSTER as string,
+    // authentication API endpoint
     authEndpoint: "/api/auth/pushapi",
     auth: {
       params: {
@@ -29,7 +27,9 @@ const ChatWindow = ({ username, role }: ChatWindowProps) => {
   // online users  count
   const [onlineUsersCount, setOnlineUsersCount] = useState(0);
   // online users
-  const [usersOnline, setUsersOnline] = useState([]);
+  const [usersOnline, setUsersOnline] = useState<
+    { username: string; message: string }[]
+  >([]);
 
   // subscribe users to the channel
   useEffect(() => {
@@ -50,20 +50,26 @@ const ChatWindow = ({ username, role }: ChatWindowProps) => {
       channel.bind("pusher:member_added", (members: any) => {
         setOnlineUsersCount(members.count);
         console.log(members);
-        
+
+        setUsersOnline((prev: { username: any; message: any }[]) => [
+          ...prev,
+          { username: members.info.username, message: "joined the chat" },
+        ]);
 
         // to add to previous state
-        setOnlineUsersCount(onlineUsersCount + 1)
+        setOnlineUsersCount(onlineUsersCount + 1);
       });
 
       channel.bind("chat-message", (data: any) => {
         const { message, username } = data;
 
-        console.log("ffff",data);
-        // to add to previous state
-        setChat((prev: { username: any; message: any; }[]) => [...prev, { username, message }]);
+        // update chat array and add to previous state
+        setChat((prev: { username: any; message: any }[]) => [
+          ...prev,
+          { username, message },
+        ]);
       });
-    } 
+    }
 
     return () => {
       pusher.unsubscribe("presence-chat");
@@ -74,30 +80,58 @@ const ChatWindow = ({ username, role }: ChatWindowProps) => {
   // send message
   const sendMessage = async (e: any) => {
     e.preventDefault();
+     // message API route at /api/index.tsx
     await axios.post("/api", {
       message,
       username,
     });
 
-    // setChat((prev: { username: any; message: any; }[]) => [...prev, { username, message }]);
-    console.log(message, username);
+    setMessage("");
   };
 
   return (
     <div className="chat-window">
       {/* welcome user */}
       <div className="chat-window__welcome">
-        <p className="chat-window__welcome__text">
-          Welcome {username} to the chat
-        </p>
-        {chat.map((chat: any, id: any) => {
+        <h1 className="chat-window__welcome__count">
+          There are {onlineUsersCount} online
+        </h1>
+        {usersOnline.map((user, id) => {
+          // return number of users online and notify when new members join
+    
           return (
-            <div key={id}>
-              <p>
-                {chat.username}: {chat.message}
-              </p>
+            <div key={id} className="chat-window__welcome__welcome-users">
+              <div className="welcome-users">
+                {" "}
+                <span className="welcome-users__user">
+                  {user.username}
+                </span>{" "}
+                just joined the chat
+              </div>
             </div>
           );
+        })}
+      </div>
+      <div>
+        {chat.map((chat: any, id: any) => {
+          {/* display chat messages */}
+          if (chat.username === username) {
+            return (
+              <div key={id}>
+                <p className="chat-window__message chat-window__message--right">
+                  me: {chat.message}
+                </p>
+              </div>
+            );
+          } else {
+            return (
+              <div key={id}>
+                <p className="chat-window__message chat-window__message--left">
+                  {chat.username}: {chat.message}
+                </p>
+              </div>
+            );
+          }
         })}
 
         {/* send messages */}
