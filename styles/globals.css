@@ -103,3 +103,19 @@
 .chat-window{
   @apply w-[30%] relative h-[90%] rounded-xl shadow-2xl;
 }
+
+.chat-window__welcome{
+  @apply relative bg-slate-700 backdrop-blur-2xl px-3 py-2 rounded-md top-0 flex pl-4 items-end w-full flex-col; 
+}
+
+.chat-window__welcome__count{
+  @apply font-medium text-purple-600 absolute uppercase top-[-50px];
+}
+
+.chat-window__welcome__welcome-users{
+  @apply  text-white font-bold;
+}
+
+.welcome-cont{
+  @apply max-h-32 overflow-y-scroll;
+}

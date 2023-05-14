@@ -35,12 +35,12 @@ const ChatWindow = ({ username, role }: ChatWindowProps) => {
   useEffect(() => {
     let mounted = true;
     if (mounted) {
+      // name of chat room defined in the API
       const channel = pusher.subscribe("presence-chat");
 
       // bind user to channel
       channel.bind("pusher:subscription_succeeded", (members: any) => {
         setOnlineUsersCount(members.count);
-        console.log(members);
       });
       channel.bind("pusher:subscription_error", (err: any) => {
         console.log(err);
@@ -49,8 +49,7 @@ const ChatWindow = ({ username, role }: ChatWindowProps) => {
       // when new users enter chat
       channel.bind("pusher:member_added", (members: any) => {
         setOnlineUsersCount(members.count);
-        console.log(members);
-
+        // notify when new users join chat
         setUsersOnline((prev: { username: any; message: any }[]) => [
           ...prev,
           { username: members.info.username, message: "joined the chat" },
@@ -80,7 +79,7 @@ const ChatWindow = ({ username, role }: ChatWindowProps) => {
   // send message
   const sendMessage = async (e: any) => {
     e.preventDefault();
-     // message API route at /api/index.tsx
+    // message API route at /api/index.tsx
     await axios.post("/api", {
       message,
       username,
@@ -96,25 +95,30 @@ const ChatWindow = ({ username, role }: ChatWindowProps) => {
         <h1 className="chat-window__welcome__count">
           There are {onlineUsersCount} online
         </h1>
-        {usersOnline.map((user, id) => {
-          // return number of users online and notify when new members join
-    
-          return (
-            <div key={id} className="chat-window__welcome__welcome-users">
-              <div className="welcome-users">
-                {" "}
-                <span className="welcome-users__user">
-                  {user.username}
-                </span>{" "}
-                just joined the chat
+        <div className="welcome-cont">
+          {usersOnline.map((user, id) => {
+            // return number of users online and notify when new members join
+
+            return (
+              <div key={id} className="chat-window__welcome__welcome-users">
+                <div className="welcome-users">
+                  {" "}
+                  <span className="welcome-users__user">
+                    {user.username}
+                  </span>{" "}
+                  just joined the chat
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
       <div>
+         {/* display chat messages */}
         {chat.map((chat: any, id: any) => {
-          {/* display chat messages */}
+          {
+            /* display chat messages */
+          }
           if (chat.username === username) {
             return (
               <div key={id}>
