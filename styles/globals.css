@@ -2,120 +2,157 @@
 @tailwind components;
 @tailwind utilities;
 
-*, body{
+*,
+body {
   @apply m-0 p-0;
 }
 
 /* Login Page components */
-.login{
+.login {
   @apply flex flex-col items-center justify-center h-screen;
 }
 
-.login__header{
+.login__header {
   @apply text-3xl font-bold text-center mb-12;
 }
-.login__form{
+.login__form {
   @apply flex flex-col items-center justify-center w-1/3;
 }
 
-.login__form__label{
+.login__form__label {
   @apply w-full text-left text-gray-700;
 }
 
-.login__form__input, .login__form__select{
+.login__form__input,
+.login__form__select {
   @apply w-full px-4 py-2 mt-2 mb-8 border border-gray-300 rounded-md;
 }
 
-.login__form__button{
+.login__form__button {
   @apply w-full px-4 py-2 mt-14 text-white text-center bg-blue-500 rounded-md;
 }
 
-.login__form__button:hover{
+.login__form__button:hover {
   @apply bg-blue-600;
 }
 
 /* End of Login styles */
 
 /* Game Streaming window styles */
-.game-streaming{
+.game-streaming {
   @apply flex p-6 gap-12 items-center w-full bg-gray-900 justify-center h-screen;
 }
 
 /* video interface style */
-.video-interface{
+.video-interface {
   @apply relative w-[65%] h-[90%] rounded-2xl shadow-2xl;
 }
 
 /* view area */
-.video-interface__view-area{
+.video-interface__view-area {
   @apply relative w-full h-[70%] rounded-t-2xl  shadow-md;
 }
 
 /* number of viewers */
 
-.video-interface__view-area__viewers{
-@apply absolute top-4 left-5 px-5 py-3 bg-slate-400/20 opacity-50 rounded-xl text-white font-medium text-xs;
+.video-interface__view-area__viewers {
+  @apply absolute top-4 left-5 px-5 py-3 bg-slate-400/20 opacity-50 rounded-xl text-white font-medium text-xs;
 }
 
 /* stream info */
-.video-interface__stream-info{
+.video-interface__stream-info {
   @apply relative w-full h-[30%] pt-3 pl-6 rounded-b-2xl bg-gray-700 text-white;
 }
 
 /* streamer details */
-.video-interface__stream-info__streamer{
+.video-interface__stream-info__streamer {
   @apply flex gap-4 items-center;
 }
 
 /* streamer name */
-.video-interface__stream-info__streamer__name{
+.video-interface__stream-info__streamer__name {
   @apply text-lg font-semibold;
 }
 
 /* streamer status */
-.video-interface__stream-info__streamer__status{
+.video-interface__stream-info__streamer__status {
   @apply text-sm py-2 px-6 text-blue-400 font-bold bg-white rounded-xl;
 }
 
 /* stream description */
-.video-interface__stream-info__stream{
+.video-interface__stream-info__stream {
   @apply text-gray-200 mt-8 flex gap-6 flex-col;
 }
 
-.video-interface__stream-info__stream__game-name{
+.video-interface__stream-info__stream__game-name {
   @apply text-4xl font-bold;
 }
 
 /* stream actions */
-.video-interface__stream-info__stream__actions{
+.video-interface__stream-info__stream__actions {
   @apply flex justify-end pr-24 gap-4 items-center;
 }
 
 /* stream actions button */
-.video-interface__stream-info__stream__actions__like{
+.video-interface__stream-info__stream__actions__exit {
   @apply text-sm py-2 px-4 text-blue-400 font-bold bg-white rounded-xl;
 }
 
-.video-interface__stream-info__stream__actions__share{
+.video-interface__stream-info__stream__actions__share {
   @apply font-semibold;
 }
 
-.chat-window{
+.chat-window {
   @apply w-[30%] relative h-[90%] rounded-xl shadow-2xl;
 }
 
-.chat-window__welcome{
-  @apply relative bg-slate-700 backdrop-blur-2xl px-3 py-2 rounded-md top-0 flex pl-4 items-end w-full flex-col; 
+.chat-window__welcome {
+  @apply relative bg-slate-700 backdrop-blur-2xl px-3 py-2 rounded-md top-0 flex pl-4 items-end w-full flex-col;
 }
 
-.chat-window__welcome__count{
+.chat-window__welcome__count {
   @apply font-medium text-purple-600 absolute uppercase top-[-50px];
 }
 
-.chat-window__welcome__welcome-users{
-  @apply  text-white font-bold;
+.chat-window__welcome__welcome-users {
+  @apply text-white font-bold;
 }
 
-.welcome-cont{
-  @apply max-h-32 overflow-y-scroll;
+.welcome-cont {
+  @apply max-h-32 min-h-[4rem] overflow-y-scroll;
+}
+
+.chat-window__chat-container {
+  @apply mt-24 px-4 h-3/5;
+}
+
+.chat-window__message--right {
+  @apply flex justify-end mb-3;
+}
+
+.chat-window__message--right p {
+  @apply p-2 rounded-lg bg-blue-500 text-white;
+}
+
+.chat-window__message--left {
+  @apply flex justify-start mb-3;
+}
+
+.chat-window__message--left p {
+  @apply p-2 rounded-lg bg-gray-200 text-gray-700;
+}
+
+.chat-window__chat-container__messages {
+  @apply w-full h-[300px] relative overflow-y-scroll;
+}
+
+.chat-window__form {
+  @apply w-full flex mt-24 justify-center items-center gap-5;
+}
+.chat-window__form__input {
+  @apply w-[800px] px-3 py-2 outline-none border-none;
+}
+
+.chat-window__form__button {
+  @apply rounded-md px-5 py-3 bg-blue-500 text-white;
 }

@@ -20,7 +20,7 @@ const ChatWindow = ({ username, role }: ChatWindowProps) => {
     },
   });
 
-  // chat array
+  // chat array to store messages
   const [chat, setChat] = useState<{ username: string; message: string }[]>([]);
   // message field input
   const [message, setMessage] = useState("");
@@ -113,30 +113,36 @@ const ChatWindow = ({ username, role }: ChatWindowProps) => {
           })}
         </div>
       </div>
-      <div>
-         {/* display chat messages */}
-        {chat.map((chat: any, id: any) => {
-          {
-            /* display chat messages */
-          }
-          if (chat.username === username) {
-            return (
-              <div key={id}>
-                <p className="chat-window__message chat-window__message--right">
-                  me: {chat.message}
-                </p>
-              </div>
-            );
-          } else {
-            return (
-              <div key={id}>
-                <p className="chat-window__message chat-window__message--left">
-                  {chat.username}: {chat.message}
-                </p>
-              </div>
-            );
-          }
-        })}
+      <div className="chat-window__chat-container">
+        {/* display chat messages */}
+        <div className="chat-window__chat-container__messages">
+          {chat.map((chat: any, id: any) => {
+            {
+              /* display chat messages */
+            }
+            if (chat.username === username) {
+              return (
+                <div
+                  key={id}
+                  className="chat-window__message chat-window__message--right"
+                >
+                  <p>me: {chat.message}</p>
+                </div>
+              );
+            } else {
+              return (
+                <div
+                  key={id}
+                  className="chat-window__message chat-window__message--left"
+                >
+                  <p>
+                    {chat.username}: {chat.message}
+                  </p>
+                </div>
+              );
+            }
+          })}
+        </div>
 
         {/* send messages */}
         <form className="chat-window__form" onSubmit={sendMessage}>

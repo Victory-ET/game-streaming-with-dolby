@@ -28,8 +28,8 @@ const VideoInterface = () => {
           </p>
           {/* reactions */}
           <div className="video-interface__stream-info__stream__actions">
-            <button className="video-interface__stream-info__stream__actions__like">
-              Like
+            <button className="video-interface__stream-info__stream__actions__exit">
+              Exit
             </button>
             <button className="video-interface__stream-info__stream__actions__share">
               Share
