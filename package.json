@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@dolbyio/dolbyio-rest-apis-client": "^3.5.5",
     "@millicast/sdk": "^0.1.39",
     "@pusher/push-notifications-web": "^1.1.0",
     "@types/node": "18.16.3",
