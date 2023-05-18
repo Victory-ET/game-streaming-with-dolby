@@ -117,7 +117,7 @@ const VideoInterface = () => {
             autoPlay
             playsInline
           ></video> */}
-          <video ref={videoRef} autoPlay playsInline />
+          <video className="h-full relative w-full" ref={videoRef} autoPlay playsInline />
         </div>
       </div>
       <div className="video-interface__stream-info">
