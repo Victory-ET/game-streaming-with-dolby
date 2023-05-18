@@ -21,6 +21,7 @@
     "dotenv": "^16.0.3",
     "eslint": "8.39.0",
     "eslint-config-next": "13.3.2",
+    "fs": "^0.0.1-security",
     "next": "13.3.2",
     "postcss": "8.4.23",
     "pusher": "^5.0.0",
