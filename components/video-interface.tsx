@@ -5,6 +5,7 @@ import VoxeetSDK from "@voxeet/voxeet-web-sdk";
 import { useState, useEffect, useRef } from "react";
 import { PeerConnection } from "@millicast/sdk";
 import { Director, Publish, View } from "@millicast/sdk";
+import Millicast from "@millicast/sdk/dist/millicast";
 
 const VideoInterface = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -19,7 +20,7 @@ const VideoInterface = () => {
         video: {
           displaySurface: "window",
         },
-        audio: false,
+        audio: true,
       };
 
       const screenCapture = await navigator.mediaDevices.getDisplayMedia(
@@ -32,6 +33,17 @@ const VideoInterface = () => {
       // Your Dolby.io integration code here
       // Connect to Dolby.io and share the screenCapture media stream
       // See the Dolby.io documentation for the specific implementation details
+      const millicast = new Millicast({
+        appId: APP_KEY,
+        appSecret: APP_SECRET,
+      });
+      const session = await millicast.create();
+
+      await session.publish(screenCapture);
+
+      const url = session.getUrl();
+
+      console.log("The video stream is now available at:", url);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -111,14 +123,13 @@ const VideoInterface = () => {
         <div className="video-interface__view-area__viewers">
           {/* number of viewers */}
           <p>500 Watching</p>
-          {/* <video
-            id="screen-video"
-            src={URL.createObjectURL(screenCapture)}
-            autoPlay
-            playsInline
-          ></video> */}
-          <video className="h-full relative w-full" ref={videoRef} autoPlay playsInline />
         </div>
+        <video
+          className="h-full relative w-full"
+          ref={videoRef}
+          autoPlay
+          playsInline
+        />
       </div>
       <div className="video-interface__stream-info">
         {/* stream info */}
