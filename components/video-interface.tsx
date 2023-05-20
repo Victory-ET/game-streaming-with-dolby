@@ -50,10 +50,8 @@ const VideoInterface = ({ role }: UserProps) => {
             streamName: "myStreamName",
           });
 
-
         // Create a new instance
         const millicastPublish = new Publish("myStreamName", tokenGenerator);
-
 
         // Get user camera and microphone
         const mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -63,7 +61,7 @@ const VideoInterface = ({ role }: UserProps) => {
 
         // Publishing options
         const broadcastOptions = {
-          mediaStream,
+          mediaStream: mediaStream,
         };
 
         // Start broadcast
@@ -90,7 +88,6 @@ const VideoInterface = ({ role }: UserProps) => {
       );
 
       console.log("millicastView", millicastView);
-      
 
       // Start connection to publisher
       try {
@@ -100,6 +97,46 @@ const VideoInterface = ({ role }: UserProps) => {
       }
     }
   };
+
+  // alternative attempt with Vorteex insttead of Millicast
+  useEffect(() => {
+    const main = async () => {
+      // Generate a client access token from the Dolby.io dashboard and insert into access_token variable
+      let access_token =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJkb2xieS5pbyIsImlhdCI6MTY4NDYwODYxNSwic3ViIjoiOUtzaEpfbjdYZmI1eFNNNXVaTjBFZz09IiwiYXV0aG9yaXRpZXMiOlsiUk9MRV9DVVNUT01FUiJdLCJ0YXJnZXQiOiJzZXNzaW9uIiwib2lkIjoiODczZmFmYmMtMDYzOC00YWUzLWIyZGYtY2Q4MWRiYWM3MWY1IiwiYWlkIjoiMTM4Nzg4ZTMtYjU3OS00YmZmLTk3M2ItODk0OTk1OTU1NDYzIiwiYmlkIjoiOGEzNjhjZWU4NzI4MzQyNDAxODcyZDUzNmMxMjE4ZGMiLCJleHAiOjE2ODQ2OTUwMTV9.ZuxzbgOEf0PLwsF1THVariBEq58E74OH8goYQ8VeUiQgvrRpT5Mv6k167ZeY6Br-71DPMsdzMVAdBcdWm9w_qg";
+      VoxeetSDK.initializeToken(access_token, (isExpired) => {
+        return new Promise((resolve, reject) => {
+          if (isExpired) {
+            reject("The access token has expired.");
+          } else {
+            resolve(access_token);
+          }
+        });
+      });
+
+      const avengersNames = [
+        "Thor",
+        "Cap",
+        "Tony Stark",
+        "Black Panther",
+        "Black Widow",
+        "Hulk",
+        "Spider-Man",
+      ];
+
+      let randomName =
+        avengersNames[Math.floor(Math.random() * avengersNames.length)];
+
+      try {
+        // Open the session
+        await VoxeetSDK.session.open({ name: randomName });
+      } catch (e) {
+        alert("Something went wrong : " + e);
+      }
+    };
+
+    main();
+  }, []);
 
   return (
     <div className="video-interface">
