@@ -56,7 +56,7 @@ body {
 /* number of viewers */
 
 .video-interface__view-area__viewers {
-  @apply absolute top-4 left-5 px-5 py-3 bg-slate-400/20 opacity-50 rounded-xl text-white font-medium text-xs;
+  @apply absolute top-4 left-5 px-5 py-3 z-10 bg-slate-400/20 opacity-50 rounded-xl text-white font-medium text-xs;
 }
 
 /* stream info */

@@ -3,14 +3,18 @@ import React from "react";
 import VoxeetSDK from "@voxeet/voxeet-web-sdk";
 // import useState
 import { useState, useEffect, useRef } from "react";
-import { PeerConnection } from "@millicast/sdk";
-import { Director, Publish, View } from "@millicast/sdk";
-import Millicast from "@millicast/sdk/dist/millicast";
+import "@millicast/sdk/dist/millicast.umd.js";
+import { Director, Publish } from "@millicast/sdk";
+
+
 
 const VideoInterface = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const APP_KEY = "9KshJ_n7Xfb5xSM5uZN0Eg==";
   const APP_SECRET = "pqeVDDQeyZKdDuU9Hl8Q4Oc5MFV0onwhgTFprUzdzuM=";
+  const PUBLISH_TOKEN =
+    "4811b659922ebd118b7fe41cedb5f77662a37215b462d9807b3a3dfac0afe012";
+  const PUBLISH_STREAM_NAME = "myStreamName";
 
   const [screenCapture, setScreenCapture] = useState<MediaStream>();
 
@@ -33,87 +37,41 @@ const VideoInterface = () => {
       // Your Dolby.io integration code here
       // Connect to Dolby.io and share the screenCapture media stream
       // See the Dolby.io documentation for the specific implementation details
-      const millicast = new Millicast({
-        appId: APP_KEY,
-        appSecret: APP_SECRET,
+      const tokenGenerator = () =>
+        Director.getPublisher({
+          token:
+            "4811b659922ebd118b7fe41cedb5f77662a37215b462d9807b3a3dfac0afe012",
+          streamName: "myStreamName",
+        });
+
+      console.log(tokenGenerator);
+
+      // Create a new instance
+      const millicastPublish = new Publish("myStreamName", tokenGenerator);
+
+      console.log(millicastPublish);
+
+      // Get user camera and microphone
+      const mediaStream = await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: false,
       });
-      const session = await millicast.create();
 
-      await session.publish(screenCapture);
+      // Publishing options
+      const broadcastOptions = {
+        mediaStream,
+      };
 
-      const url = session.getUrl();
-
-      console.log("The video stream is now available at:", url);
+      // Start broadcast
+      try {
+        await millicastPublish.connect(broadcastOptions);
+      } catch (e) {
+        console.log("Connection failed, handle error", e);
+      }
     } catch (error) {
       console.error("Error:", error);
     }
   };
-
-  // state to manage screenshare
-  // const [isSharing, setIsSharing] = useState(false);
-  // const serverURL = "";
-
-  // const capabilities = PeerConnection.getCapabilities("video");
-  // console.log(capabilities);
-
-  //   // Publishing Options
-  //   const broadcastOptions = {
-  //     mediaStream: mediaStream,
-  //   };
-
-  //   // Start broadcast
-  //   try {
-  //     await publisher.connect(broadcastOptions);
-  //   } catch (e) {
-  //     console.error("Connection failed, handle error", e);
-  //   }
-  // };
-  // getCam();
-
-  // const handleScreenShare = async () => {
-  //   const displayMediaOptions = {
-  //     video: {
-  //       displaySurface: "window",
-  //     },
-  //     audio: false,
-  //   };
-
-  //   setScreenCapture(await navigator.mediaDevices.getDisplayMedia(
-  //     displayMediaOptions
-  //   ))
-
-  //   const broadcastOptions = {
-  //     mediaStream: screenCapture,
-  //   };
-
-  //   const tokenGenerator = () =>
-  //     Director.getPublisher({
-  //       token:
-  //         "4811b659922ebd118b7fe41cedb5f77662a37215b462d9807b3a3dfac0afe012",
-  //       streamName: "myStreamName",
-  //     });
-  //   const publisher = new Publish("myStreamName", tokenGenerator);
-  //   try {
-  //     const mediaStream = await publisher.connect(broadcastOptions);
-  //   } catch (e) {
-  //     console.error("Connection failed, handle error", e);
-  //   }
-
-  //   // Create callback to generate a new token
-  //   const ViewtokenGenerator = () =>
-  //     Director.getSubscriber({
-  //       streamName: "myStreamName",
-  //       streamAccountId: "875058156",
-  //       subscriberToken:
-  //         "27df13e796d7b2bea982d375ad813d7fc79b6fb52de23aca267a874e624990af", // Optional: This token is needed if you're subscribing to a secure stream,
-  //       // This token should be provided by the publish owner.
-  //     });
-
-  //   // Create Millicast instance
-  //   const millicastView = new View("publish-stream-name", ViewtokenGenerator);
-  // };
-
-  // handleScreenShare();
 
   return (
     <div className="video-interface">
