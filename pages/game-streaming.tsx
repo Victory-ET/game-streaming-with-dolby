@@ -12,7 +12,7 @@ const GameStream = () => {
       {/* Game Streaming Platform */}
 
       {/* Video Interface */}
-      <VideoInterface />
+      <VideoInterface role={role as string} />
       {/* Chat Panel */}
       <ChatWindow username={name} role={role} />
     </div>

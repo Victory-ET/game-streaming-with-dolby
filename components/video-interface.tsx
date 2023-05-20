@@ -4,72 +4,100 @@ import VoxeetSDK from "@voxeet/voxeet-web-sdk";
 // import useState
 import { useState, useEffect, useRef } from "react";
 import "@millicast/sdk/dist/millicast.umd.js";
-import { Director, Publish } from "@millicast/sdk";
+import { Director, Publish, View } from "@millicast/sdk";
 
+// define type of data passed to the component
+type UserProps = {
+  role: string | undefined;
+};
 
-
-const VideoInterface = () => {
+const VideoInterface = ({ role }: UserProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const APP_KEY = "9KshJ_n7Xfb5xSM5uZN0Eg==";
   const APP_SECRET = "pqeVDDQeyZKdDuU9Hl8Q4Oc5MFV0onwhgTFprUzdzuM=";
   const PUBLISH_TOKEN =
     "4811b659922ebd118b7fe41cedb5f77662a37215b462d9807b3a3dfac0afe012";
   const PUBLISH_STREAM_NAME = "myStreamName";
+  const STREAM_ID = "TeTVWH";
 
   const [screenCapture, setScreenCapture] = useState<MediaStream>();
+  const userRole = role ? role : "Streamer";
 
   const startScreenShare = async () => {
-    try {
-      const displayMediaOptions = {
-        video: {
-          displaySurface: "window",
-        },
-        audio: true,
-      };
+    if (userRole.toLowerCase() === "streamer") {
+      try {
+        const displayMediaOptions = {
+          video: {
+            displaySurface: "window",
+          },
+          audio: true,
+        };
 
-      const screenCapture = await navigator.mediaDevices.getDisplayMedia(
-        displayMediaOptions
-      );
-      if (videoRef.current) {
-        videoRef.current.srcObject = screenCapture;
-      }
+        const screenCapture = await navigator.mediaDevices.getDisplayMedia(
+          displayMediaOptions
+        );
+        if (videoRef.current) {
+          videoRef.current.srcObject = screenCapture;
+        }
 
-      // Your Dolby.io integration code here
-      // Connect to Dolby.io and share the screenCapture media stream
-      // See the Dolby.io documentation for the specific implementation details
-      const tokenGenerator = () =>
-        Director.getPublisher({
-          token:
-            "4811b659922ebd118b7fe41cedb5f77662a37215b462d9807b3a3dfac0afe012",
-          streamName: "myStreamName",
+        // Your Dolby.io integration code here
+        // Connect to Dolby.io and share the screenCapture media stream
+        // See the Dolby.io documentation for the specific implementation details
+        const tokenGenerator = () =>
+          Director.getPublisher({
+            token:
+              "4811b659922ebd118b7fe41cedb5f77662a37215b462d9807b3a3dfac0afe012",
+            streamName: "myStreamName",
+          });
+
+
+        // Create a new instance
+        const millicastPublish = new Publish("myStreamName", tokenGenerator);
+
+
+        // Get user camera and microphone
+        const mediaStream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+          video: true,
         });
 
-      console.log(tokenGenerator);
+        // Publishing options
+        const broadcastOptions = {
+          mediaStream,
+        };
+
+        // Start broadcast
+        try {
+          await millicastPublish.connect(broadcastOptions);
+        } catch (e) {
+          console.log("Connection failed, handle error", e);
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    } else {
+      const tokenGenerator = () =>
+        Director.getSubscriber({
+          streamName: "myStreamName",
+          streamAccountId: "TeTVWH",
+        });
 
       // Create a new instance
-      const millicastPublish = new Publish("myStreamName", tokenGenerator);
+      const millicastView = new View(
+        "myStreamName",
+        tokenGenerator,
+        videoRef.current as HTMLVideoElement
+      );
 
-      console.log(millicastPublish);
+      console.log("millicastView", millicastView);
+      
 
-      // Get user camera and microphone
-      const mediaStream = await navigator.mediaDevices.getUserMedia({
-        audio: false,
-        video: false,
-      });
-
-      // Publishing options
-      const broadcastOptions = {
-        mediaStream,
-      };
-
-      // Start broadcast
+      // Start connection to publisher
       try {
-        await millicastPublish.connect(broadcastOptions);
+        await millicastView.connect();
       } catch (e) {
         console.log("Connection failed, handle error", e);
       }
-    } catch (error) {
-      console.error("Error:", error);
     }
   };
 
