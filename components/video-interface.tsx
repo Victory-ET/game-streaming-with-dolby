@@ -15,11 +15,14 @@ type UserProps = {
 const VideoInterface = ({ username, role }: UserProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  // default role is streamer
   const userRole = role ? role : "Streamer";
 
-  // alternative attempt with Vorteex insttead of Millicast
+  // Set the name of the current logged in user
   const [name, setName] = useState<string>("");
+  // manage number of participants
   const [participants, setParticipants] = useState<any[]>([]);
+  // name of the conference
   const conferenceName = "gaming-room";
   useEffect(() => {
     const main = async () => {
@@ -40,8 +43,8 @@ const VideoInterface = ({ username, role }: UserProps) => {
         await VoxeetSDK.session.open({ name: username });
         setName(username as string);
         /*
-         * 1. Create a conference room with an alias
-         * 2. Join the conference with its id
+         * 1. Create a conference room with an the defined conference name
+         * 2. Join the conference with user defined name
          */
         VoxeetSDK.conference
           .create({ alias: conferenceName })
@@ -50,9 +53,11 @@ const VideoInterface = ({ username, role }: UserProps) => {
 
         // Listen to participant events
         VoxeetSDK.conference.on("participantAdded", (participant) => {
-          setParticipants((prevParticipants) => [...prevParticipants, participant]);
-        }
-        );
+          setParticipants((prevParticipants) => [
+            ...prevParticipants,
+            participant,
+          ]);
+        });
       } catch (e) {
         alert("Something went wrong : " + e);
       }
@@ -63,23 +68,23 @@ const VideoInterface = ({ username, role }: UserProps) => {
 
   const sharingScreen = async () => {
     if (userRole.toLowerCase() === "streamer") {
+      // if user is a streamer, they can start screen sharing. If a screen is already been shared it will alert the user
       VoxeetSDK.conference
         .startScreenShare()
         .then(() => {
           console.log("Screen sharing started");
-          // const screenCapture = await navigator.mediaDevices.getDisplayMedia(
-          //   displayMediaOptions
-          // );
           displayStream(videoRef.current as HTMLVideoElement);
         })
         .catch((err) => console.error(err));
     } else {
+      // if user is a viewer, they will be alerted that they won't be able to share their screen
       alert("welcome viewer");
       displayStream(videoRef.current as HTMLVideoElement);
     }
   };
 
   const displayStream = (videoElement: HTMLVideoElement) => {
+    // dis play the stream
     VoxeetSDK.conference.on("streamAdded", (participant, stream) => {
       if (stream.type === "ScreenShare") {
         videoElement.srcObject = stream;
@@ -100,7 +105,9 @@ const VideoInterface = ({ username, role }: UserProps) => {
         {/* view area */}
         <div className="video-interface__view-area__viewers">
           {/* number of viewers */}
-          <p>{participants.length} Watching, you are logged in as {name}</p>
+          <p>
+            {participants.length} Watching, you are logged in as {name}
+          </p>
         </div>
         <video
           className="h-full relative w-full"
