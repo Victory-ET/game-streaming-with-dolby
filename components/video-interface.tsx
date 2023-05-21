@@ -20,7 +20,7 @@ const VideoInterface = ({ username, role }: UserProps) => {
   // alternative attempt with Vorteex insttead of Millicast
   const [name, setName] = useState<string>("");
   const [participants, setParticipants] = useState<any[]>([]);
-  const conferenceAliasInput = "gaming-room";
+  const conferenceName = "gaming-room";
   useEffect(() => {
     const main = async () => {
       // Generate a client access token from the Dolby.io dashboard and insert into access_token variable
@@ -44,7 +44,7 @@ const VideoInterface = ({ username, role }: UserProps) => {
          * 2. Join the conference with its id
          */
         VoxeetSDK.conference
-          .create({ alias: conferenceAliasInput })
+          .create({ alias: conferenceName })
           .then((conference) => VoxeetSDK.conference.join(conference, {}))
           .catch((err) => console.error(err));
 
