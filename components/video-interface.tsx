@@ -23,82 +23,84 @@ const VideoInterface = ({ role }: UserProps) => {
   const [screenCapture, setScreenCapture] = useState<MediaStream>();
   const userRole = role ? role : "Streamer";
 
-  const startScreenShare = async () => {
-    if (userRole.toLowerCase() === "streamer") {
-      try {
-        const displayMediaOptions = {
-          video: {
-            displaySurface: "window",
-          },
-          audio: true,
-        };
+  // const startScreenShare = async () => {
+  //   if (userRole.toLowerCase() === "streamer") {
+  //     try {
+  //       const displayMediaOptions = {
+  //         video: {
+  //           displaySurface: "window",
+  //         },
+  //         audio: true,
+  //       };
 
-        const screenCapture = await navigator.mediaDevices.getDisplayMedia(
-          displayMediaOptions
-        );
-        if (videoRef.current) {
-          videoRef.current.srcObject = screenCapture;
-        }
+  //       const screenCapture = await navigator.mediaDevices.getDisplayMedia(
+  //         displayMediaOptions
+  //       );
+  //       if (videoRef.current) {
+  //         videoRef.current.srcObject = screenCapture;
+  //       }
 
-        // Your Dolby.io integration code here
-        // Connect to Dolby.io and share the screenCapture media stream
-        // See the Dolby.io documentation for the specific implementation details
-        const tokenGenerator = () =>
-          Director.getPublisher({
-            token:
-              "4811b659922ebd118b7fe41cedb5f77662a37215b462d9807b3a3dfac0afe012",
-            streamName: "myStreamName",
-          });
+  //       // Your Dolby.io integration code here
+  //       // Connect to Dolby.io and share the screenCapture media stream
+  //       // See the Dolby.io documentation for the specific implementation details
+  //       const tokenGenerator = () =>
+  //         Director.getPublisher({
+  //           token:
+  //             "4811b659922ebd118b7fe41cedb5f77662a37215b462d9807b3a3dfac0afe012",
+  //           streamName: "myStreamName",
+  //         });
 
-        // Create a new instance
-        const millicastPublish = new Publish("myStreamName", tokenGenerator);
+  //       // Create a new instance
+  //       const millicastPublish = new Publish("myStreamName", tokenGenerator);
 
-        // Get user camera and microphone
-        const mediaStream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
-          video: true,
-        });
+  //       // Get user camera and microphone
+  //       const mediaStream = await navigator.mediaDevices.getUserMedia({
+  //         audio: true,
+  //         video: true,
+  //       });
 
-        // Publishing options
-        const broadcastOptions = {
-          mediaStream: mediaStream,
-        };
+  //       // Publishing options
+  //       const broadcastOptions = {
+  //         mediaStream: mediaStream,
+  //       };
 
-        // Start broadcast
-        try {
-          await millicastPublish.connect(broadcastOptions);
-        } catch (e) {
-          console.log("Connection failed, handle error", e);
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    } else {
-      const tokenGenerator = () =>
-        Director.getSubscriber({
-          streamName: "myStreamName",
-          streamAccountId: "TeTVWH",
-        });
+  //       // Start broadcast
+  //       try {
+  //         await millicastPublish.connect(broadcastOptions);
+  //       } catch (e) {
+  //         console.log("Connection failed, handle error", e);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     }
+  //   } else {
+  //     const tokenGenerator = () =>
+  //       Director.getSubscriber({
+  //         streamName: "myStreamName",
+  //         streamAccountId: "TeTVWH",
+  //       });
 
-      // Create a new instance
-      const millicastView = new View(
-        "myStreamName",
-        tokenGenerator,
-        videoRef.current as HTMLVideoElement
-      );
+  //     // Create a new instance
+  //     const millicastView = new View(
+  //       "myStreamName",
+  //       tokenGenerator,
+  //       videoRef.current as HTMLVideoElement
+  //     );
 
-      console.log("millicastView", millicastView);
+  //     console.log("millicastView", millicastView);
 
-      // Start connection to publisher
-      try {
-        await millicastView.connect();
-      } catch (e) {
-        console.log("Connection failed, handle error", e);
-      }
-    }
-  };
+  //     // Start connection to publisher
+  //     try {
+  //       await millicastView.connect();
+  //     } catch (e) {
+  //       console.log("Connection failed, handle error", e);
+  //     }
+  //   }
+  // };
 
   // alternative attempt with Vorteex insttead of Millicast
+  const [name, setName] = useState<string>("");
+  const conferenceAliasInput = "gaming-room";
   useEffect(() => {
     const main = async () => {
       // Generate a client access token from the Dolby.io dashboard and insert into access_token variable
@@ -130,6 +132,15 @@ const VideoInterface = ({ role }: UserProps) => {
       try {
         // Open the session
         await VoxeetSDK.session.open({ name: randomName });
+        setName(randomName);
+        /*
+         * 1. Create a conference room with an alias
+         * 2. Join the conference with its id
+         */
+        VoxeetSDK.conference
+          .create({ alias: conferenceAliasInput })
+          .then((conference) => VoxeetSDK.conference.join(conference, {}))
+          .catch((err) => console.error(err));
       } catch (e) {
         alert("Something went wrong : " + e);
       }
@@ -138,6 +149,39 @@ const VideoInterface = ({ role }: UserProps) => {
     main();
   }, []);
 
+  const sharingScreen = async () => {
+    if (userRole.toLowerCase() === "streamer") {
+    VoxeetSDK.conference
+      .startScreenShare()
+      .then(() => {
+        console.log("Screen sharing started");
+        // const screenCapture = await navigator.mediaDevices.getDisplayMedia(
+        //   displayMediaOptions
+        // );
+        displayStream(videoRef.current as HTMLVideoElement);
+      })
+      .catch((err) => console.error(err));
+    } else {
+      alert("welcome viewer");
+      displayStream(videoRef.current as HTMLVideoElement);
+    }
+  };
+
+  const displayStream = (videoElement: HTMLVideoElement) => {
+    VoxeetSDK.conference.on("streamAdded", (participant, stream) => {
+      if (stream.type === "ScreenShare") {
+        videoElement.srcObject = stream;
+        videoRef.current?.play();
+      }
+
+      if (stream.getVideoTracks().length > 0) {
+        videoElement.srcObject = stream;
+        videoRef.current?.play();
+      }
+    });
+  };
+
+
   return (
     <div className="video-interface">
       {/* This componnent will house the stream sharing and also display information regarding it */}
@@ -145,7 +189,7 @@ const VideoInterface = ({ role }: UserProps) => {
         {/* view area */}
         <div className="video-interface__view-area__viewers">
           {/* number of viewers */}
-          <p>500 Watching</p>
+          <p>500 Watching, you are logged in as {name}</p>
         </div>
         <video
           className="h-full relative w-full"
@@ -176,7 +220,8 @@ const VideoInterface = ({ role }: UserProps) => {
             </button>
             <button
               className="video-interface__stream-info__stream__actions__share"
-              onClick={() => startScreenShare()}
+              // onClick={() => startScreenShare()}
+              onClick={() => sharingScreen()}
             >
               Share
             </button>
