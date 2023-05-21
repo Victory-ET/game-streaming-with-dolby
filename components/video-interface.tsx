@@ -8,10 +8,11 @@ import { Director, Publish, View } from "@millicast/sdk";
 
 // define type of data passed to the component
 type UserProps = {
+  username: string | undefined;
   role: string | undefined;
 };
 
-const VideoInterface = ({ role }: UserProps) => {
+const VideoInterface = ({ username, role }: UserProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const APP_KEY = "9KshJ_n7Xfb5xSM5uZN0Eg==";
   const APP_SECRET = "pqeVDDQeyZKdDuU9Hl8Q4Oc5MFV0onwhgTFprUzdzuM=";
@@ -22,6 +23,7 @@ const VideoInterface = ({ role }: UserProps) => {
 
   const [screenCapture, setScreenCapture] = useState<MediaStream>();
   const userRole = role ? role : "Streamer";
+
 
 
 
@@ -43,23 +45,11 @@ const VideoInterface = ({ role }: UserProps) => {
         });
       });
 
-      const avengersNames = [
-        "Thor",
-        "Cap",
-        "Tony Stark",
-        "Black Panther",
-        "Black Widow",
-        "Hulk",
-        "Spider-Man",
-      ];
-
-      let randomName =
-        avengersNames[Math.floor(Math.random() * avengersNames.length)];
 
       try {
         // Open the session
-        await VoxeetSDK.session.open({ name: randomName });
-        setName(randomName);
+        await VoxeetSDK.session.open({ name: username });
+        setName(username as string);
         /*
          * 1. Create a conference room with an alias
          * 2. Join the conference with its id
