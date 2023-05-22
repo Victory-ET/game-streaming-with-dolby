@@ -138,7 +138,6 @@ const VideoInterface = ({ username, role }: UserProps) => {
             </button>
             <button
               className="video-interface__stream-info__stream__actions__share"
-              // onClick={() => startScreenShare()}
               onClick={() => sharingScreen()}
             >
               Share
