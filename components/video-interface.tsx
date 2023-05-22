@@ -98,6 +98,15 @@ const VideoInterface = ({ username, role }: UserProps) => {
     });
   };
 
+  const EndSharing = () => {
+    VoxeetSDK.conference
+      .stopScreenShare()
+      .then(() => {
+        console.log("Screen sharing ended");
+      })
+      .catch((err) => console.error(err));
+  };
+
   return (
     <div className="video-interface">
       {/* This componnent will house the stream sharing and also display information regarding it */}
@@ -133,7 +142,10 @@ const VideoInterface = ({ username, role }: UserProps) => {
           </p>
           {/* reactions */}
           <div className="video-interface__stream-info__stream__actions">
-            <button className="video-interface__stream-info__stream__actions__exit">
+            <button
+              className="video-interface__stream-info__stream__actions__exit"
+              onClick={() => EndSharing()}
+            >
               Exit
             </button>
             <button
